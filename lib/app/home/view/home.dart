@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:jiffy/jiffy.dart';
 import 'package:pigeon/app/home/mock/mock_emails.dart';
-import 'package:pigeon/app/home/models/email.dart';
+import 'package:pigeon/app/home/view/widgets/email_widget.dart';
+
+import '../../../core/presentation/widgets/main_app_bar.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -19,6 +20,8 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
+      floatingActionButtonLocation: FloatingActionButtonLocation.miniEndDocked,
       endDrawer: const Drawer(),
       body: const MainEmailWidgets(),
       floatingActionButton: FloatingActionButton(
@@ -81,43 +84,7 @@ class _MainEmailWidgetsState extends State<MainEmailWidgets> {
   Widget build(BuildContext context) {
     return CustomScrollView(
       slivers: <Widget>[
-        SliverAppBar(
-          backgroundColor: Colors.transparent,
-          title: Wrap(
-              spacing: 10.0,
-              crossAxisAlignment: WrapCrossAlignment.center,
-              children: const [
-                Icon(FontAwesomeIcons.seedling, size: 16),
-                Text('Pigeon')
-              ]),
-          leading: IconButton(
-                  onPressed: () => Navigator.pop(context),
-                  icon: const Icon(Icons.chevron_left))
-              .animate()
-              .fadeIn(duration: 600.ms, curve: Curves.easeOutSine)
-              .slideX(
-                  duration: 600.ms,
-                  begin: 1.0,
-                  end: 0.0,
-                  curve: Curves.easeOutSine),
-          actions: [
-            IconButton(
-                onPressed: () {}, icon: const Icon(Icons.search_rounded)),
-            Padding(
-              padding: const EdgeInsets.only(right: 8.0),
-              child: IconButton(
-                  onPressed: () => Scaffold.of(context).openEndDrawer(),
-                  icon: const Icon(Icons.menu_rounded)),
-            ),
-          ],
-          floating: true,
-          snap: true,
-          expandedHeight: 60,
-          flexibleSpace: const FlexibleSpaceBar(
-            centerTitle: false,
-            // background: FlutterLogo(),
-          ),
-        ),
+        MainAppBar(),
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(16.0, 16.0, 8.0, 8.0),
@@ -584,143 +551,6 @@ class _MainEmailWidgetsState extends State<MainEmailWidgets> {
               ),
         )),
       ],
-    );
-  }
-}
-
-class EmailWidget extends StatelessWidget {
-  final Email email;
-  const EmailWidget({
-    super.key,
-    required this.email,
-    required this.index,
-  });
-
-  final int index;
-
-  @override
-  Widget build(BuildContext context) {
-    return FractionallySizedBox(
-      widthFactor: 0.85,
-      alignment: Alignment.centerLeft,
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: index == 0
-              ? const BorderRadius.only(
-                  topRight: Radius.circular(20.0),
-                )
-              : null,
-          color: Colors.white,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Flexible(
-                    flex: 4,
-                    child: Row(
-                      children: [
-                        Flexible(
-                          child: Container(
-                            height: 50,
-                            width: 50,
-                            constraints: const BoxConstraints(
-                              maxWidth: 50,
-                              maxHeight: 50,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.grey[400],
-                              borderRadius: BorderRadius.circular(16.0),
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(12.0),
-                              child: CachedNetworkImage(
-                                fit: BoxFit.cover,
-                                progressIndicatorBuilder:
-                                    (context, child, loadingProgress) {
-                                  // if (loadingProgress == null)
-                                  //   return child;
-                                  return const BlurHash(
-                                      hash: 'LGH]zY3D}@F10#E2}XE%BB}A0}a0');
-                                },
-                                imageUrl:
-                                    'https://cdn.discordapp.com/attachments/1091203713370173480/1094309288421380146/C._Vergara_the_man_has_the_name_in_black_in_the_middle_of_the_i_9959ed56-1c63-403f-b320-7ebb27c4bc28.png',
-                              ),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          flex: 5,
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 16.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  email.subject!,
-                                  style: const TextStyle(
-                                    color: Color.fromARGB(255, 61, 61, 61),
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  maxLines: 1,
-                                ),
-                                Text(email.body!,
-                                    maxLines: 1,
-                                    style: const TextStyle(
-                                        overflow: TextOverflow.ellipsis,
-                                        color: Color.fromARGB(
-                                            255, 163, 163, 163))),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Flexible(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          Jiffy.parseFromDateTime(email.date!).fromNow(),
-                          textAlign: TextAlign.end,
-                          style: const TextStyle(
-                            fontSize: 12.0,
-                            color: Color(0xFF333333),
-                          ),
-                        ),
-                        const SizedBox(height: 4.0),
-                        Container(
-                          width: 40.0,
-                          height: 16.0,
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFED9C18),
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          child: const Icon(Icons.airplanemode_active,
-                              color: Colors.white, size: 12.0),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              Divider(
-                color: Colors.grey[300],
-                thickness: 1.0,
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }
