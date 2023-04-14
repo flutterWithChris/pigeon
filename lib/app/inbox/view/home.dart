@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:pigeon/app/home/mock/mock_emails.dart';
-import 'package:pigeon/app/home/view/widgets/email_widget.dart';
+import 'package:pigeon/app/emails/mock/mock_emails.dart';
+import 'package:pigeon/app/inbox/view/widgets/email_widget.dart';
 
 import '../../../core/presentation/widgets/main_app_bar.dart';
 
@@ -71,11 +71,18 @@ class _MainEmailWidgetsState extends State<MainEmailWidgets> {
   void initState() {
     emailWidgets = [
       for (int i = 0; i < mockEmails.length; i++)
-        EmailWidget(
-          index: i,
-          email: mockEmails[i],
+        Padding(
+          padding: const EdgeInsets.only(right: 16.0),
+          child: EmailWidget(
+            index: i,
+            email: mockEmails[i],
+          ),
         )
-    ];
+    ].animate(interval: 150.ms).slideY(
+          begin: 1.0,
+          duration: const Duration(milliseconds: 400),
+          curve: Curves.easeOutSine,
+        );
     // TODO: implement initState
     super.initState();
   }
@@ -142,17 +149,24 @@ class _MainEmailWidgetsState extends State<MainEmailWidgets> {
                           child: Container(
                             decoration: BoxDecoration(
                               boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.45),
-                                  spreadRadius: 4,
-                                  blurRadius: 12,
-                                  offset: const Offset(1, 4),
-                                ),
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? BoxShadow(
+                                        color: Colors.black.withOpacity(0.45),
+                                        spreadRadius: 4,
+                                        blurRadius: 12,
+                                        offset: const Offset(1, 4),
+                                      )
+                                    : BoxShadow(
+                                        color: Colors.grey.withOpacity(0.12),
+                                        spreadRadius: 4,
+                                        blurRadius: 12,
+                                        offset: const Offset(1, 4),
+                                      )
                               ],
                               color: Colors.grey[400],
                               borderRadius: const BorderRadius.only(
                                 topRight: Radius.circular(20.0),
-                                bottomRight: Radius.circular(20.0),
+                                bottomRight: Radius.circular(10.0),
                               ),
                               // image: const DecorationImage(
                               //     image: CachedNetworkImageProvider(
@@ -190,12 +204,22 @@ class _MainEmailWidgetsState extends State<MainEmailWidgets> {
                             child: Container(
                                     decoration: BoxDecoration(
                                       boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withOpacity(0.45),
-                                          spreadRadius: 4,
-                                          blurRadius: 12,
-                                          offset: const Offset(1, 4),
-                                        ),
+                                        Theme.of(context).brightness ==
+                                                Brightness.dark
+                                            ? BoxShadow(
+                                                color: Colors.black
+                                                    .withOpacity(0.45),
+                                                spreadRadius: 4,
+                                                blurRadius: 12,
+                                                offset: const Offset(1, 4),
+                                              )
+                                            : BoxShadow(
+                                                color: Colors.grey
+                                                    .withOpacity(0.10),
+                                                spreadRadius: 4,
+                                                blurRadius: 12,
+                                                offset: const Offset(1, 4),
+                                              )
                                       ],
                                       color: Theme.of(context).cardColor,
                                       borderRadius: const BorderRadius.only(
@@ -543,13 +567,13 @@ class _MainEmailWidgetsState extends State<MainEmailWidgets> {
           ),
         ),
         SliverList(
-            delegate: SliverChildListDelegate(
-          emailWidgets.animate(interval: 150.ms).slideY(
-                begin: 1.0,
-                duration: const Duration(milliseconds: 400),
-                curve: Curves.easeOutSine,
-              ),
-        )),
+          delegate: SliverChildBuilderDelegate(
+            (context, index) {
+              return emailWidgets[index];
+            },
+            childCount: emailWidgets.length,
+          ),
+        ),
       ],
     );
   }

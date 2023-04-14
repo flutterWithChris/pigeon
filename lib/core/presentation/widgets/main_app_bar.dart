@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class MainAppBar extends StatelessWidget {
@@ -12,7 +11,9 @@ class MainAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
-      backgroundColor: Colors.transparent,
+      shadowColor: Colors.transparent,
+      backgroundColor: Theme.of(context).colorScheme.background,
+      foregroundColor: Theme.of(context).textTheme.bodyMedium!.color,
       title: Wrap(
           spacing: 10.0,
           crossAxisAlignment: WrapCrossAlignment.center,
@@ -20,16 +21,16 @@ class MainAppBar extends StatelessWidget {
             Icon(FontAwesomeIcons.seedling, size: 16),
             Text('Pigeon')
           ]),
-      leading: IconButton(
-              onPressed: () => Navigator.pop(context),
-              icon: const Icon(Icons.chevron_left))
-          .animate()
-          .fadeIn(duration: 600.ms, curve: Curves.easeOutSine)
-          .slideX(
-              duration: 600.ms,
-              begin: 1.0,
-              end: 0.0,
-              curve: Curves.easeOutSine),
+      // leading: IconButton(
+      //         onPressed: () => Navigator.pop(context),
+      //         icon: const Icon(Icons.chevron_left))
+      //     .animate()
+      //     .fadeIn(duration: 600.ms, curve: Curves.easeOutSine)
+      //     .slideX(
+      //         duration: 600.ms,
+      //         begin: 1.0,
+      //         end: 0.0,
+      //         curve: Curves.easeOutSine),
       actions: actions ??
           [
             IconButton(

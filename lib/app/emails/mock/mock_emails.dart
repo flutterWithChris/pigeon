@@ -1,22 +1,22 @@
 import 'dart:math';
 
-import 'package:pigeon/app/home/models/email.dart';
+import 'package:pigeon/app/emails/models/email.dart';
 
 Random _random = Random();
 
 List<Email> mockEmails = [
-  for (int i = 0; i < 5; i++)
+  for (int i = 0; i < 50; i++)
     Email(
       id: i.toString(),
-      senderName: _senderNames[i],
-      senderEmail: _randomEmails[i],
+      senderName: _senderNames[_random.nextInt(_senderNames.length)],
+      senderEmail: _randomEmails[_random.nextInt(_randomEmails.length)],
       // senderPhotoUrl: _senderPhotoUrls[_random.nextInt(_senderPhotoUrls.length)],
-      receiverName: _receiverNames[i],
-      receiverEmail: _randomEmails[i],
+      receiverName: _receiverNames[_random.nextInt(_receiverNames.length)],
+      receiverEmail: _randomEmails[_random.nextInt(_randomEmails.length)],
       // receiverPhotoUrl:
       //     _receiverPhotoUrls[_random.nextInt(_receiverPhotoUrls.length)],
-      subject: _subjects[i],
-      body: _bodies[i],
+      subject: _subjects[_random.nextInt(_subjects.length)],
+      body: _bodies[_random.nextInt(_bodies.length)],
       date: DateTime.now().subtract(Duration(days: _random.nextInt(3))),
       isImportant: _random.nextBool(),
       status: _random.nextBool() ? EmailStatus.unread : EmailStatus.unread,

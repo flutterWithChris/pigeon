@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:pigeon/app/home/models/email.dart';
-import 'package:pigeon/app/home/view/home.dart';
-import 'package:pigeon/app/home/view/view_email.dart';
+import 'package:pigeon/app/emails/models/email.dart';
+import 'package:pigeon/app/inbox/view/home.dart';
+import 'package:pigeon/app/emails/view_email.dart';
 
 GoRouter router = GoRouter(
   initialLocation: '/',

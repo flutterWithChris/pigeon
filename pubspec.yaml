@@ -45,6 +45,8 @@ dependencies:
   font_awesome_flutter: ^10.4.0
   go_router: ^6.5.5
   jiffy: ^6.1.0
+  equatable: ^2.0.5
+  flutter_bloc: ^8.1.2
 
 dev_dependencies:
   flutter_test:

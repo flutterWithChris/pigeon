@@ -42,7 +42,7 @@ const ColorScheme flexSchemeDark = ColorScheme(
   onPrimary: Color(0xfffafffd),
   primaryContainer: Color(0xffbe772b),
   onPrimaryContainer: Color(0xfffdf2e6),
-  secondary: Color(0xffffc49d),
+  secondary: Color(0xfff1a33b),
   onSecondary: Color(0xff141310),
   secondaryContainer: Color(0xfff07a19),
   onSecondaryContainer: Color(0xfffff2e3),
