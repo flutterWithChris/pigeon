@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:pigeon/app/emails/mock/mock_emails.dart';
+import 'package:go_router/go_router.dart';
+
 import 'package:pigeon/app/inbox/view/widgets/email_widget.dart';
+import 'package:pigeon/app/view_email/mock/mock_emails.dart';
 
 import '../../../core/presentation/widgets/main_app_bar.dart';
 
@@ -21,11 +23,12 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      floatingActionButtonLocation: FloatingActionButtonLocation.miniEndDocked,
+      //  floatingActionButtonLocation: FloatingActionButtonLocation.miniEndDocked,
       endDrawer: const Drawer(),
       body: const MainEmailWidgets(),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
+          context.push('/compose-email');
           setState(() {
             fabClicked = true;
           });
@@ -35,9 +38,9 @@ class _HomePageState extends State<HomePage> {
             });
           });
         },
-        tooltip: 'Increment',
+        tooltip: 'Compose',
         child: const Icon(
-          FontAwesomeIcons.feather,
+          FontAwesomeIcons.pencil,
           color: Color.fromARGB(255, 240, 240, 240),
         ).animate(target: fabClicked ? 1 : 0).shake(
               duration: 400.ms,
@@ -547,10 +550,9 @@ class _MainEmailWidgetsState extends State<MainEmailWidgets> {
               spacing: 8.0,
               crossAxisAlignment: WrapCrossAlignment.center,
               children: [
-                const Icon(Icons.email_rounded, color: Colors.grey, size: 14),
-                Text(
+                Icon(Icons.email_rounded, color: Colors.grey[600], size: 14),
+                const Text(
                   'All Mail',
-                  style: TextStyle(color: Colors.grey[200]),
                 )
               ]
                   .animate(interval: 250.ms)

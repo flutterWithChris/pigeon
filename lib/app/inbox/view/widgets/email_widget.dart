@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jiffy/jiffy.dart';
-
-import '../../../emails/models/email.dart';
+import 'package:pigeon/core/models/email.dart';
 
 class EmailWidget extends StatelessWidget {
   final Email email;

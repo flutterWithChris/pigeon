@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:pigeon/app/emails/models/email.dart';
+import 'package:pigeon/core/models/email.dart';
 
 Random _random = Random();
 

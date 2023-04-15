@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:pigeon/app/emails/models/email.dart';
+import 'package:pigeon/core/models/email.dart';
 
 part 'reply_event.dart';
 part 'reply_state.dart';

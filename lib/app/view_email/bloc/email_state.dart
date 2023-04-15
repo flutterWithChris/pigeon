@@ -13,6 +13,7 @@ class EmailInitial extends EmailState {}
 class EmailLoading extends EmailState {}
 
 class EmailLoaded extends EmailState {
+  @override
   final Email email;
   const EmailLoaded({required this.email}) : super(email: email);
 }
