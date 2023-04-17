@@ -37,8 +37,17 @@ class ViewEmailPage extends StatelessWidget {
               IconButton(
                 onPressed: () {},
                 icon: const Icon(
+                  Icons.reply_all_rounded,
+                ),
+              ),
+              IconButton(
+                onPressed: () {},
+                icon: const Icon(Icons.forward),
+              ),
+              IconButton(
+                onPressed: () {},
+                icon: const Icon(
                   Icons.more_vert,
-                  color: Color.fromARGB(255, 240, 240, 240),
                 ),
               ),
             ],

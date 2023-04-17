@@ -1,12 +1,14 @@
+import 'package:animations/animations.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:go_router/go_router.dart';
+import 'package:pigeon/app/compose_email/compose_email.dart';
 
 import 'package:pigeon/app/inbox/view/widgets/email_widget.dart';
 import 'package:pigeon/app/view_email/mock/mock_emails.dart';
+import 'package:pigeon/core/presentation/widgets/main_bottom_nav_bar.dart';
 
 import '../../../core/presentation/widgets/main_app_bar.dart';
 
@@ -19,35 +21,38 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool fabClicked = false;
+  int index = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: const MainBottomNavBar(),
       resizeToAvoidBottomInset: false,
       //  floatingActionButtonLocation: FloatingActionButtonLocation.miniEndDocked,
       endDrawer: const Drawer(),
       body: const MainEmailWidgets(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          context.push('/compose-email');
-          setState(() {
-            fabClicked = true;
-          });
-          await Future.delayed(const Duration(milliseconds: 500), () {
-            setState(() {
-              fabClicked = false;
-            });
-          });
-        },
-        tooltip: 'Compose',
-        child: const Icon(
-          FontAwesomeIcons.pencil,
-          color: Color.fromARGB(255, 240, 240, 240),
-        ).animate(target: fabClicked ? 1 : 0).shake(
-              duration: 400.ms,
-              curve: Curves.easeOutSine,
-              hz: 2.0,
-              offset: const Offset(1.5, 0),
-            ),
+      floatingActionButton: OpenContainer(
+        closedShape: const CircleBorder(),
+        transitionDuration: 400.milliseconds,
+        closedColor: Theme.of(context).colorScheme.primary,
+        openColor: Theme.of(context).colorScheme.background,
+        openBuilder: (context, action) => const ComposeEmail(),
+        closedBuilder: (context, action) => Container(
+          height: 60,
+          width: 60,
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.primary,
+            shape: BoxShape.circle,
+          ),
+          child: const Icon(
+            Icons.edit_rounded,
+            color: Color.fromARGB(255, 240, 240, 240),
+          ).animate(target: fabClicked ? 1 : 0).shake(
+                duration: 400.ms,
+                curve: Curves.easeOutSine,
+                hz: 2.0,
+                offset: const Offset(1.5, 0),
+              ),
+        ),
       ),
     );
   }
@@ -521,12 +526,13 @@ class _MainEmailWidgetsState extends State<MainEmailWidgets> {
                                       });
                                     });
                                   },
-                                  icon: const Icon(Icons.add_rounded)
+                                  icon: const Icon(
+                                          Icons.create_new_folder_outlined)
                                       .animate(target: addClicked ? 1 : 0)
                                       .rotate(),
                                 )
                               ]
-                                  .animate(interval: 250.ms)
+                                  .animate(interval: 200.ms)
                                   .fadeIn(delay: 400.ms)
                                   .slideY(
                                       delay: 400.ms,

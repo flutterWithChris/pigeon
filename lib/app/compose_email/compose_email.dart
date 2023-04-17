@@ -8,13 +8,23 @@ class ComposeEmail extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
+      floatingActionButton: FloatingActionButton(
+          onPressed: () {}, child: const Icon(Icons.send, color: Colors.white)),
       body: CustomScrollView(
         slivers: [
           MainAppBar(
             actions: [
+              IconButton(onPressed: () {}, icon: const Icon(Icons.attach_file)),
               IconButton(
-                icon: const Icon(Icons.send),
+                icon: const Icon(Icons.schedule_rounded),
                 onPressed: () {},
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: IconButton(
+                  icon: const Icon(Icons.more_vert_rounded),
+                  onPressed: () {},
+                ),
               ),
             ],
           ),

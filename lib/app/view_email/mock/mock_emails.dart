@@ -19,7 +19,7 @@ List<Email> mockEmails = [
       body: _bodies[_random.nextInt(_bodies.length)],
       date: DateTime.now().subtract(Duration(days: _random.nextInt(3))),
       isImportant: _random.nextBool(),
-      status: _random.nextBool() ? EmailStatus.unread : EmailStatus.unread,
+      status: _random.nextBool() ? EmailStatus.read : EmailStatus.unread,
       // type: _random.nextBool() ? EmailType.inbox : EmailType.sent,
     )
 ];
