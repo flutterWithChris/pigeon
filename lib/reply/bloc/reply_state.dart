@@ -1,10 +1,11 @@
 part of 'reply_bloc.dart';
 
 abstract class ReplyState extends Equatable {
-  const ReplyState();
+  final Email? email;
+  const ReplyState({this.email});
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [email];
 }
 
 class ReplyInitial extends ReplyState {}
@@ -22,6 +23,7 @@ class ReplyError extends ReplyState {
 }
 
 class ReplyStarted extends ReplyState {
+  @override
   final Email email;
   const ReplyStarted({required this.email});
 
@@ -29,7 +31,17 @@ class ReplyStarted extends ReplyState {
   List<Object> get props => [email];
 }
 
+class ReplySending extends ReplyState {
+  @override
+  final Email email;
+  const ReplySending({required this.email});
+
+  @override
+  List<Object> get props => [email];
+}
+
 class ReplySent extends ReplyState {
+  @override
   final Email email;
   const ReplySent({required this.email});
 

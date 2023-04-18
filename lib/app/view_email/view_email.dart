@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -16,15 +17,37 @@ class ViewEmailPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            context.read<ReplyBloc>().state is ReplyStarted
-                ? context.read<ReplyBloc>().add(CancelReply())
-                : context.read<ReplyBloc>().add(ReplyToEmail(email: email));
-          },
-          child: const Icon(
-            Icons.reply,
-            color: Color.fromARGB(255, 240, 240, 240),
-          )),
+        onPressed: () {
+          context.read<ReplyBloc>().state is ReplyStarted
+              ? context.read<ReplyBloc>().add(SendReply(email: email))
+              : context.read<ReplyBloc>().add(ReplyToEmail(email: email));
+        },
+        child: Icon(
+          context.read<ReplyBloc>().state is ReplyStarted ||
+                  context.read<ReplyBloc>().state is ReplySending
+              ? Icons.send_rounded
+              : Icons.reply,
+          color: const Color.fromARGB(255, 240, 240, 240),
+        )
+            .animate(
+              // onPlay: (controller) =>
+              //     controller.repeat(reverse: true),
+              target: context.watch<ReplyBloc>().state is ReplySending ? 1 : 0,
+            )
+            .slideX(
+              begin: -0.5,
+              end: -0.9,
+              duration: const Duration(milliseconds: 400),
+              curve: Curves.easeOutBack,
+            )
+            .slideX(
+              delay: 400.ms,
+              begin: 0.5,
+              end: 5.0,
+              duration: const Duration(milliseconds: 400),
+              curve: Curves.easeOutBack,
+            ),
+      ),
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         // padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -66,10 +89,12 @@ class ViewEmailPage extends StatelessWidget {
                         BlocBuilder<ReplyBloc, ReplyState>(
                           builder: (context, state) {
                             print('State: $state');
-                            if (state is ReplyStarted) {
+                            if (state is ReplyStarted ||
+                                state is ReplySending ||
+                                state is ReplySent) {
                               final TextEditingController subjectController =
                                   TextEditingController(
-                                      text: 'Re: ${state.email.subject}');
+                                      text: 'Re: ${state.email?.subject}');
                               return Flexible(
                                 flex: 4,
                                 child: Hero(
@@ -152,138 +177,28 @@ class ViewEmailPage extends StatelessWidget {
                           },
                         ),
                         Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
-                          child: BlocBuilder<ReplyBloc, ReplyState>(
-                            builder: (context, state) {
-                              if (state is ReplyStarted) {
-                                return Wrap(
-                                  crossAxisAlignment: WrapCrossAlignment.center,
-                                  spacing: 8,
-                                  children: [
-                                    BlocBuilder<ReplyBloc, ReplyState>(
-                                      builder: (context, state) {
-                                        if (state is ReplyStarted) {
-                                          return const Text('To: ')
-                                              .animate()
-                                              .slideX(
-                                                  curve: Curves.easeOutSine,
-                                                  duration: 200.ms);
-                                        }
-                                        if (state is ReplyInitial) {}
-                                        return Container();
-                                      },
-                                    ),
-                                    SizedBox(
-                                      height: 24,
-                                      width: 24,
-                                      child: ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                        child: Hero(
-                                          transitionOnUserGestures: true,
-                                          tag: 'senderEmail-${email.id}',
-                                          child: CachedNetworkImage(
-                                            fit: BoxFit.cover,
-                                            progressIndicatorBuilder: (context,
-                                                child, loadingProgress) {
-                                              // if (loadingProgress == null)
-                                              //   return child;
-                                              return const BlurHash(
-                                                  hash:
-                                                      'LGH]zY3D}@F10#E2}XE%BB}A0}a0');
-                                            },
-                                            imageUrl:
-                                                'https://cdn.discordapp.com/attachments/1091203713370173480/1094309288421380146/C._Vergara_the_man_has_the_name_in_black_in_the_middle_of_the_i_9959ed56-1c63-403f-b320-7ebb27c4bc28.png',
-                                          ),
-                                        ),
+                            padding: const EdgeInsets.symmetric(vertical: 4),
+                            child: PageTransitionSwitcher(
+                                child: context.watch<ReplyBloc>().state
+                                        is ReplyStarted
+                                    ? EmailRecipientField(
+                                        email: email,
+                                        key: UniqueKey(),
+                                      )
+                                    : EmailRecipientField(
+                                        email: email,
+                                        key: UniqueKey(),
                                       ),
-                                    ),
-                                    Hero(
-                                        transitionOnUserGestures: true,
-                                        tag: 'senderName-${email.id}',
-                                        child: Material(
-                                            type: MaterialType.transparency,
-                                            child: Text(
-                                                '${email.senderName!}  ·'))),
-                                    Text(email.senderEmail!)
-                                    // .animate()
-                                    // .fadeIn(
-                                    //     curve: Curves.easeOutSine,
-                                    //     duration: 400.ms)
-                                    // .slideX(
-                                    //     curve: Curves.easeOutSine,
-                                    //     duration: 400.ms),
-                                  ].animate().slideX(),
-                                );
-                              }
-                              if (state is ReplyInitial) {
-                                return Wrap(
-                                  crossAxisAlignment: WrapCrossAlignment.center,
-                                  spacing: 8,
-                                  children: [
-                                    // BlocBuilder<ReplyBloc, ReplyState>(
-                                    //   builder: (context, state) {
-                                    //     if (state is ReplyStarted) {
-                                    //       return const Text('To: ')
-                                    //           .animate()
-                                    //           .slideX(
-                                    //               curve: Curves.easeOutSine,
-                                    //               duration: 400.ms);
-                                    //     }
-                                    //     if (state is ReplyInitial) {}
-                                    //     return Container();
-                                    //   },
-                                    // ),
-                                    SizedBox(
-                                      height: 24,
-                                      width: 24,
-                                      child: ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                        child: Hero(
-                                          transitionOnUserGestures: true,
-                                          tag: 'senderEmail-${email.id}',
-                                          child: CachedNetworkImage(
-                                            fit: BoxFit.cover,
-                                            progressIndicatorBuilder: (context,
-                                                child, loadingProgress) {
-                                              // if (loadingProgress == null)
-                                              //   return child;
-                                              return const BlurHash(
-                                                  hash:
-                                                      'LGH]zY3D}@F10#E2}XE%BB}A0}a0');
-                                            },
-                                            imageUrl:
-                                                'https://cdn.discordapp.com/attachments/1091203713370173480/1094309288421380146/C._Vergara_the_man_has_the_name_in_black_in_the_middle_of_the_i_9959ed56-1c63-403f-b320-7ebb27c4bc28.png',
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Hero(
-                                        transitionOnUserGestures: true,
-                                        tag: 'senderName-${email.id}',
-                                        child: Material(
-                                            type: MaterialType.transparency,
-                                            child: Text(
-                                                '${email.senderName!}  ·'))),
-                                    Text(email.senderEmail!)
-                                        .animate()
-                                        .fadeIn(
-                                            curve: Curves.easeOutSine,
-                                            duration: 400.ms)
-                                        .slideX(
-                                            curve: Curves.easeOutSine,
-                                            duration: 400.ms),
-                                  ],
-                                );
-                              } else {
-                                return const Center(
-                                  child: Text('Something Went Wrong...'),
-                                );
-                              }
-                            },
-                          ),
-                        ),
+                                transitionBuilder:
+                                    (child, animation, secondaryAnimation) {
+                                  return SharedAxisTransition(
+                                    transitionType:
+                                        SharedAxisTransitionType.horizontal,
+                                    animation: animation,
+                                    secondaryAnimation: secondaryAnimation,
+                                    child: child,
+                                  );
+                                })),
                       ],
                     ),
                   ),
@@ -321,7 +236,9 @@ class ViewEmailPage extends StatelessWidget {
                   ),
                 );
               }
-              if (state is ReplyStarted) {
+              if (state is ReplyStarted ||
+                  state is ReplySent ||
+                  state is ReplySending) {
                 return SliverToBoxAdapter(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
@@ -337,6 +254,7 @@ class ViewEmailPage extends StatelessWidget {
                           textCapitalization: TextCapitalization.sentences,
                           decoration: const InputDecoration(
                             border: InputBorder.none,
+                            hintText: 'Write your reply here...',
                           ),
                         ),
                         const Padding(
@@ -428,6 +346,68 @@ class ViewEmailPage extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class EmailRecipientField extends StatelessWidget {
+  const EmailRecipientField({
+    super.key,
+    required this.email,
+  });
+
+  final Email email;
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      crossAxisAlignment: WrapCrossAlignment.center,
+      spacing: 8,
+      children: [
+        context.watch<ReplyBloc>().state is ReplyStarted
+            ? Text(
+                'To: ',
+                style: const TextStyle(backgroundColor: Colors.transparent),
+                key: UniqueKey(),
+              )
+            : SizedBox(key: UniqueKey()),
+
+        SizedBox(
+          height: 24,
+          width: 24,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(8.0),
+            child: Hero(
+              transitionOnUserGestures: true,
+              tag: 'senderEmail-${email.id}',
+              child: CachedNetworkImage(
+                fit: BoxFit.cover,
+                progressIndicatorBuilder: (context, child, loadingProgress) {
+                  // if (loadingProgress == null)
+                  //   return child;
+                  return const BlurHash(hash: 'LGH]zY3D}@F10#E2}XE%BB}A0}a0');
+                },
+                imageUrl:
+                    'https://cdn.discordapp.com/attachments/1091203713370173480/1094309288421380146/C._Vergara_the_man_has_the_name_in_black_in_the_middle_of_the_i_9959ed56-1c63-403f-b320-7ebb27c4bc28.png',
+              ),
+            ),
+          ),
+        ),
+        Hero(
+            transitionOnUserGestures: true,
+            tag: 'senderName-${email.id}',
+            child: Material(
+                type: MaterialType.transparency,
+                child: Text('${email.senderName!}  ·'))),
+        Text(email.senderEmail!)
+        // .animate()
+        // .fadeIn(
+        //     curve: Curves.easeOutSine,
+        //     duration: 400.ms)
+        // .slideX(
+        //     curve: Curves.easeOutSine,
+        //     duration: 400.ms),
+      ],
     );
   }
 }

@@ -17,9 +17,11 @@ class ReplyBloc extends Bloc<ReplyEvent, ReplyState> {
   }
 
   void _onSendReply(SendReply event, Emitter<ReplyState> emit) async {
-    emit(ReplyLoading());
-    await Future.delayed(const Duration(seconds: 2));
+    emit(ReplySending(email: event.email));
+    await Future.delayed(const Duration(seconds: 1));
     emit(ReplySent(email: event.email));
+    await Future.delayed(const Duration(seconds: 2));
+    emit(ReplyInitial());
   }
 
   void _onCancelReply(CancelReply event, Emitter<ReplyState> emit) {

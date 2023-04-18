@@ -25,9 +25,11 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Pigeon',
         theme: ThemeData(
+            canvasColor: Colors.transparent,
             colorScheme: flexSchemeLight,
             fontFamily: GoogleFonts.laila().fontFamily),
         darkTheme: ThemeData(
+            canvasColor: Colors.transparent,
             colorScheme: flexSchemeDark,
             fontFamily: GoogleFonts.laila().fontFamily),
         themeMode: ThemeMode.system,
