@@ -6,3 +6,8 @@ abstract class EmailEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
+
+class LoadEmail extends EmailEvent {
+  final String id;
+  const LoadEmail({required this.id});
+}

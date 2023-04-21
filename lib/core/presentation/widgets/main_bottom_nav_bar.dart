@@ -42,11 +42,15 @@ class _MainBottomNavBarState extends State<MainBottomNavBar> {
       items: [
         /// Home
         SalomonBottomBarItem(
-          icon: Icon(
-            Icons.inbox_outlined,
-            color: Theme.of(context).brightness == Brightness.dark
-                ? Colors.white
-                : null,
+          icon: SizedBox.square(
+            dimension: 24,
+            child: Image.asset(
+              'assets/icons/main/inbox_icon.png',
+              fit: BoxFit.contain,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white
+                  : const Color(0xff435369),
+            ),
           ),
           title: Text(
             'Inbox',

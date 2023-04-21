@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import 'package:html/parser.dart';
 import 'package:pigeon/core/models/email.dart';
 import 'package:pigeon/core/presentation/widgets/main_app_bar.dart';
+import 'package:pigeon/core/presentation/widgets/main_bottom_nav_bar.dart';
 import 'package:pigeon/reply/bloc/reply_bloc.dart';
 
 class ViewEmailPage extends StatelessWidget {
@@ -16,6 +19,7 @@ class ViewEmailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
+      bottomNavigationBar: const MainBottomNavBar(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           context.read<ReplyBloc>().state is ReplyStarted
@@ -179,8 +183,14 @@ class ViewEmailPage extends StatelessWidget {
                         Padding(
                             padding: const EdgeInsets.symmetric(vertical: 4),
                             child: PageTransitionSwitcher(
+                                duration: 400.ms,
+                                reverse: true,
                                 child: context.watch<ReplyBloc>().state
-                                        is ReplyStarted
+                                            is ReplyStarted ||
+                                        context.watch<ReplyBloc>().state
+                                            is ReplySending ||
+                                        context.watch<ReplyBloc>().state
+                                            is ReplySent
                                     ? EmailRecipientField(
                                         email: email,
                                         key: UniqueKey(),
@@ -192,6 +202,7 @@ class ViewEmailPage extends StatelessWidget {
                                 transitionBuilder:
                                     (child, animation, secondaryAnimation) {
                                   return SharedAxisTransition(
+                                    fillColor: Colors.transparent,
                                     transitionType:
                                         SharedAxisTransitionType.horizontal,
                                     animation: animation,
@@ -232,7 +243,7 @@ class ViewEmailPage extends StatelessWidget {
                         tag: 'body-${email.id}',
                         child: Material(
                             type: MaterialType.transparency,
-                            child: Text(email.body!))),
+                            child: HtmlWidget(parse(email.body!).outerHtml))),
                   ),
                 );
               }
@@ -364,7 +375,9 @@ class EmailRecipientField extends StatelessWidget {
       crossAxisAlignment: WrapCrossAlignment.center,
       spacing: 8,
       children: [
-        context.watch<ReplyBloc>().state is ReplyStarted
+        context.watch<ReplyBloc>().state is ReplyStarted ||
+                context.watch<ReplyBloc>().state is ReplySending ||
+                context.watch<ReplyBloc>().state is ReplySent
             ? Text(
                 'To: ',
                 style: const TextStyle(backgroundColor: Colors.transparent),

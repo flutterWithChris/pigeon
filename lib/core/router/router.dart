@@ -1,4 +1,6 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pigeon/app/compose_email/compose_email.dart';
 import 'package:pigeon/app/inbox/view/home.dart';
@@ -15,10 +17,28 @@ GoRouter router = GoRouter(
       builder: (context, state) => const HomePage(),
     ),
     GoRoute(
-        path: '/view-email',
-        builder: (context, state) => ViewEmailPage(
+      path: '/view-email',
+      // builder: (context, state) => ViewEmailPage(
+      //       email: state.extra! as Email,
+      //     ),
+      pageBuilder: (context, state) {
+        return CustomTransitionPage(
+            transitionDuration: 400.ms,
+            reverseTransitionDuration: 400.ms,
+            child: ViewEmailPage(
               email: state.extra! as Email,
-            )),
+            ),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+              return SharedAxisTransition(
+                animation: animation,
+                secondaryAnimation: secondaryAnimation,
+                transitionType: SharedAxisTransitionType.scaled,
+                child: child,
+              );
+            });
+      },
+    ),
     GoRoute(
       path: '/compose-email',
       builder: (context, state) => const ComposeEmail(),

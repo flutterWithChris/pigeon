@@ -82,11 +82,13 @@ class MySearchDelegate extends SearchDelegate {
 
   @override
   // TODO: implement searchFieldStyle
-  TextStyle? get searchFieldStyle => const TextStyle(fontSize: 16);
+  TextStyle? get searchFieldStyle =>
+      const TextStyle(fontSize: 16, overflow: TextOverflow.fade);
 
   @override
   // TODO: implement searchFieldLabel
-  String? get searchFieldLabel => 'Search mail, people, attachments...';
+  String? get searchFieldLabel =>
+      '"Today\'s meeting", @John, attachment_name...';
   @override
   List<Widget> buildActions(BuildContext context) {
     return [

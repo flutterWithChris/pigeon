@@ -2,9 +2,11 @@ import 'package:animations/animations.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_blurhash/flutter_blurhash.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pigeon/app/compose_email/compose_email.dart';
+import 'package:pigeon/app/inbox/bloc/inbox_bloc.dart';
 
 import 'package:pigeon/app/inbox/view/widgets/email_widget.dart';
 import 'package:pigeon/app/view_email/mock/mock_emails.dart';
@@ -37,8 +39,8 @@ class _HomePageState extends State<HomePage> {
         openColor: Theme.of(context).colorScheme.background,
         openBuilder: (context, action) => const ComposeEmail(),
         closedBuilder: (context, action) => Container(
-          height: 60,
-          width: 60,
+          height: 55,
+          width: 55,
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.primary,
             shape: BoxShape.circle,
@@ -596,13 +598,36 @@ class _MainEmailWidgetsState extends State<MainEmailWidgets> {
               ),
             ),
           ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                return emailWidgets[index];
-              },
-              childCount: emailWidgets.length,
-            ),
+          BlocBuilder<InboxBloc, InboxState>(
+            builder: (context, state) {
+              if (state is InboxLoaded) {
+                emailWidgets.clear();
+                for (int i = 0; i < state.emails.length; i++) {
+                  emailWidgets.add(
+                    EmailWidget(
+                      email: state.emails[i],
+                      index: i,
+                    ),
+                  );
+                }
+                return SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      return emailWidgets[index];
+                    },
+                    childCount: emailWidgets.length,
+                  ),
+                );
+              }
+              return SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    return emailWidgets[index];
+                  },
+                  childCount: emailWidgets.length,
+                ),
+              );
+            },
           ),
         ],
       );

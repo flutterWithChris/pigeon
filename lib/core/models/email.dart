@@ -1,3 +1,5 @@
+import 'package:enough_mail/enough_mail.dart';
+
 enum EmailStatus {
   sent,
   read,
@@ -111,6 +113,25 @@ class Email {
       id: snap['id'],
       type: snap['type'],
       isImportant: snap['isImportant'],
+    );
+  }
+
+  // From MIME message
+  factory Email.fromMimeMessage(MimeMessage message) {
+    return Email(
+      // email: message.,
+      subject: message.decodeSubject(),
+      body: message.decodeHtmlTextPart(),
+      // date: DateTime.parse(message.date),
+      senderEmail: message.fromEmail,
+      senderName: 'Sender Name',
+      //  senderPhotoUrl: message.from?.photoUrl,
+      receiverEmail: message.recipientAddresses.first,
+      // receiverName: message.to?.name,
+      // receiverPhotoUrl: message.to?.photoUrl,
+      id: message.messageId,
+      //  type: message.type,
+      // isImportant: message.isImportant,
     );
   }
 }

@@ -130,7 +130,7 @@ class _EmailWidgetState extends State<EmailWidget> {
                                     tag: 'subject-${widget.email.id}',
                                     child: Material(
                                       type: MaterialType.transparency,
-                                      child: Text(widget.email.subject!,
+                                      child: Text(widget.email.subject ?? '',
                                           maxLines: 1,
                                           overflow: TextOverflow.fade,
                                           softWrap: false,
@@ -246,40 +246,43 @@ class _EmailWidgetState extends State<EmailWidget> {
                       ),
                     ),
                   ),
-                  Flexible(
-                    fit: FlexFit.tight,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Hero(
-                          transitionOnUserGestures: true,
-                          tag: 'date-${widget.email.id}',
-                          child: Material(
-                            type: MaterialType.transparency,
-                            child: Text(
-                              Jiffy.parseFromDateTime(widget.email.date!)
-                                  .fromNow(),
-                              maxLines: 1,
-                              textAlign: TextAlign.end,
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
+                  widget.email.date != null
+                      ? Flexible(
+                          fit: FlexFit.tight,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Hero(
+                                transitionOnUserGestures: true,
+                                tag: 'date-${widget.email.id}',
+                                child: Material(
+                                  type: MaterialType.transparency,
+                                  child: Text(
+                                    Jiffy.parseFromDateTime(widget.email.date!)
+                                        .fromNow(),
+                                    maxLines: 1,
+                                    textAlign: TextAlign.end,
+                                    style:
+                                        Theme.of(context).textTheme.bodySmall,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 4.0),
+                              Container(
+                                width: 40.0,
+                                height: 16.0,
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFED9C18),
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                child: const Icon(Icons.airplanemode_active,
+                                    color: Colors.white, size: 12.0),
+                              ),
+                            ],
                           ),
-                        ),
-                        const SizedBox(height: 4.0),
-                        Container(
-                          width: 40.0,
-                          height: 16.0,
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFED9C18),
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          child: const Icon(Icons.airplanemode_active,
-                              color: Colors.white, size: 12.0),
-                        ),
-                      ],
-                    ),
-                  ),
+                        )
+                      : const SizedBox.shrink(),
                 ],
               ),
             ),
